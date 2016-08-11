@@ -2,9 +2,7 @@
 
 angular.module('myApp',[]);
 
-angular.module('myApp').service('AppModel', function($http, $rootScope) {
-
-  var self = this;
+angular.module('myApp').service('AppModel', function($http) {
 
   this.tasks = [];
   this.description = '';
@@ -29,7 +27,7 @@ angular.module('myApp').service('AppModel', function($http, $rootScope) {
     $http.post('http://localhost:3000/real-time/api/v1/tasks', task)
       .then(function(response) {
           task = _.merge(task, response.data);
-          // this.tasks.push(task);
+          this.tasks.push(task);
           this.description = '';
         }.bind(this),
         function(response) {
@@ -46,7 +44,7 @@ angular.module('myApp').service('AppModel', function($http, $rootScope) {
     $http.put('http://localhost:3000/real-time/api/v1/tasks/' + task.id, task)
       .then(function(response) {
           this.unlockTask(task);
-          // task = _.merge(task, response.data);
+          task = _.merge(task, response.data);
         }.bind(this),
         function(response) {
           alert('An error occurred. ' + response.data.message);
@@ -56,9 +54,9 @@ angular.module('myApp').service('AppModel', function($http, $rootScope) {
   this.deleteTask = function(taskId) {
     $http.delete('http://localhost:3000/real-time/api/v1/tasks/' + taskId)
       .then(function(response) {
-          //this.tasks = _.remove(this.tasks, function(task) {
-          //  return task.id !== taskId;
-          //});
+          this.tasks = _.remove(this.tasks, function(task) {
+            return task.id !== taskId;
+          });
         }.bind(this),
         function(response) {
           alert('An error occurred. ' + response.data.message);
@@ -77,53 +75,12 @@ angular.module('myApp').service('AppModel', function($http, $rootScope) {
           this.user = response.data;
           $http.defaults.headers.common.Authorization = this.user.authorization;
           this.getTasks();
-
-          // Make the connection
-          this.socket = io.connect( 'http://localhost:4000', { query: 'token=' + this.user.authorization + '&user_id=' + this.user.id } );
-          this.socket.on('CREATE', this.handleCreateEvent);
-          this.socket.on('UPDATE', this.handleUpdateEvent);
-          this.socket.on('DELETE', this.handleDeleteEvent);
-
         }.bind(this),
         function(response) {
           alert('An error occurred. ' + response.data.message);
         });
   }
 
-  /**
-   * SOCKET EVENTS!
-   */
-  this.handleCreateEvent = function(data) {
-    if (data.type === 'task') {
-      self.tasks.push(data.item);
-    }
-    $rootScope.$apply();
-  };
-
-  this.handleUpdateEvent = function(data) {
-    if (data.type === 'task') {
-      var task = _.find(self.tasks, { id: data.item.id });
-      _.merge(task, data.item);
-    }
-    $rootScope.$apply();
-  };
-
-  this.handleDeleteEvent = function(data) {
-    if (data.type === 'task') {
-      self.tasks = _.remove(self.tasks, function(task) {
-        return task.id !== Number(data.item.id);
-      });
-    }
-    $rootScope.$apply();
-  };
-
-  this.lockTask = function(task) {
-    this.socket.emit('LOCK', { type: 'task', item: task.id, token: this.user.authorization });
-  }
-
-  this.unlockTask = function(task) {
-    this.socket.emit('UNLOCK', { type: 'task', item: task.id, token: this.user.authorization });
-  }
 
 });
 

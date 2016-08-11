@@ -1,1 +1,1 @@
-var server = require('testatic')('./src', 8080);
+var server = require('testatic')('./src', 8070);
