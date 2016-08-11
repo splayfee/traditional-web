@@ -1,0 +1,67 @@
+body, td {
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 12px;
+}
+
+div {
+    box-sizing: border-box;
+    border: #999999 1px solid;
+    border-radius: 8px;
+    padding:16px;
+    margin-bottom: 16px;
+    width: 100%;
+    min-width: 700px;
+}
+
+p {
+    margin: 4px;
+}
+
+.add-input {
+    border: 1px solid #888888;
+    padding: 1px 8px 1px 8px;
+    width: 55%;
+}
+
+hr {
+    margin: 16px 0 16px 0;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    padding-bottom: 16px;
+    vertical-align: middle;
+    list-style: none;
+}
+
+.delete-task {
+    text-align: center;
+    vertical-align: middle;
+    margin: 0;
+    padding: 1px 3px 1px 3px;
+    width: 8px;
+    height: 8px;
+    border: 1px solid #555555;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.task-input {
+    border: none;
+    background-color: #eeeeee;
+    border: 1px solid #ffffff;
+    padding: 8px;
+    width: 70%;
+}
+
+.task-timestamp {
+    width: 100px;
+}
+
+.task-input:hover, .task-input:focus {
+    border: 1px solid #aaaaaa;
+}
